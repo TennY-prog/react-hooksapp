@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import MovieList from './components/Movielist';
+import MovieList from './components/MovieList';
 import Filter from './components/Filter';
 import AddMovie from './components/AddMovie';
-import './styles.css';
+import './Style.css';
 
 const App = () => {
   // Initial movies data
