@@ -5,7 +5,8 @@ const AddMovie = ({ onAddMovie }) => {
     title: '',
     description: '',
     posterURL: '',
-    rating: ''
+    rating: '',
+    trailer: ''
   });
 
   const handleChange = (e) => {
@@ -20,13 +21,20 @@ const AddMovie = ({ onAddMovie }) => {
     e.preventDefault();
     
     if (!newMovie.title || !newMovie.description || !newMovie.posterURL || !newMovie.rating) {
-      alert('Please fill in all fields');
+      alert('Please fill in all required fields (Title, Description, Poster URL, Rating)');
       return;
+    }
+
+    // Convert YouTube watch URL to embed URL if needed
+    let trailerUrl = newMovie.trailer;
+    if (trailerUrl && trailerUrl.includes('youtube.com/watch?v=')) {
+      trailerUrl = trailerUrl.replace('watch?v=', 'embed/');
     }
 
     const movieToAdd = {
       ...newMovie,
-      rating: parseFloat(newMovie.rating)
+      rating: parseFloat(newMovie.rating),
+      trailer: trailerUrl
     };
 
     onAddMovie(movieToAdd);
@@ -36,8 +44,11 @@ const AddMovie = ({ onAddMovie }) => {
       title: '',
       description: '',
       posterURL: '',
-      rating: ''
+      rating: '',
+      trailer: ''
     });
+    
+    alert('Movie added successfully!');
   };
 
   return (
@@ -45,7 +56,7 @@ const AddMovie = ({ onAddMovie }) => {
       <h2>Add New Movie</h2>
       <form onSubmit={handleSubmit} className="add-movie-form">
         <div className="form-group">
-          <label>Title:</label>
+          <label>Title: *</label>
           <input
             type="text"
             name="title"
@@ -57,7 +68,7 @@ const AddMovie = ({ onAddMovie }) => {
         </div>
         
         <div className="form-group">
-          <label>Description:</label>
+          <label>Description: *</label>
           <textarea
             name="description"
             value={newMovie.description}
@@ -69,19 +80,19 @@ const AddMovie = ({ onAddMovie }) => {
         </div>
         
         <div className="form-group">
-          <label>Poster URL:</label>
+          <label>Poster URL: *</label>
           <input
             type="url"
             name="posterURL"
             value={newMovie.posterURL}
             onChange={handleChange}
-            placeholder="Enter poster image URL"
+            placeholder="https://example.com/poster.jpg"
             required
           />
         </div>
         
         <div className="form-group">
-          <label>Rating (1-10):</label>
+          <label>Rating (1-10): *</label>
           <input
             type="number"
             name="rating"
@@ -90,9 +101,21 @@ const AddMovie = ({ onAddMovie }) => {
             min="1"
             max="10"
             step="0.1"
-            placeholder="Enter rating"
+            placeholder="8.5"
             required
           />
+        </div>
+        
+        <div className="form-group">
+          <label>Trailer URL (YouTube):</label>
+          <input
+            type="url"
+            name="trailer"
+            value={newMovie.trailer}
+            onChange={handleChange}
+            placeholder="https://www.youtube.com/watch?v=VIDEO_ID or https://youtube.com/embed/VIDEO_ID"
+          />
+          <small className="help-text">Paste YouTube URL (optional)</small>
         </div>
         
         <button type="submit" className="submit-btn">
